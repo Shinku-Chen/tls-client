@@ -33,6 +33,7 @@ type HttpClient interface {
 	Get(url string) (resp *http.Response, err error)
 	Head(url string) (resp *http.Response, err error)
 	Post(url, contentType string, body io.Reader) (resp *http.Response, err error)
+	GetHttpClient() *http.Client
 }
 
 // Interface guards are a cheap way to make sure all methods are implemented, this is a static check and does not affect runtime performance.
@@ -212,7 +213,9 @@ func (c *httpClient) SetProxy(proxyUrl string) error {
 func (c *httpClient) GetProxy() string {
 	return c.config.proxyUrl
 }
-
+func (c *httpClient) GetHttpClient() *http.Client {
+	return &c.Client
+}
 func (c *httpClient) applyProxy() error {
 	var dialer proxy.ContextDialer
 	dialer = proxy.Direct
